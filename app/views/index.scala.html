@@ -1,0 +1,49 @@
+@main("Warehousing") {
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="60">
+    <title>Warehousing</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+            .login-container {
+              max-width: 400px;
+              margin: 50px auto;
+              padding: 20px;
+              border: 1px solid #ddd;
+              border-radius: 10px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .form-label {
+              font-weight: bold;
+            }
+            .small-text {
+              font-size: 0.875em; /* Adjust the size as needed */
+            }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="login-container">
+        <h4 class="text-center">Login Below!</h4>
+        <form action="afterLogin" method="post">
+          <div class="form-group">
+            <label for="email" class="form-label small-text">Email:</label>
+            <input type="name" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password" class="form-label small-text">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <center>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </center>
+        </form>
+        <h4 class="text-center mt-4 small-text">If you don't have an account, please create one from the link below</h4>
+        <div class="text-center">
+          <a href="@routes.LoginController.signUpPage" class="btn btn-secondary">Sign Up Here</a>
+        </div>
+      </div>
+    </div>
+  </body>
+}
