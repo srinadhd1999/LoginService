@@ -19,6 +19,8 @@ COPY --from=build /app/target/universal/stage /app
 # Set the working directory in the container
 WORKDIR /app
 
+RUN sbt stage
+
 # Make port 9000 available to the world outside this container
 EXPOSE 9000
 
@@ -26,4 +28,4 @@ EXPOSE 9000
 ENV PLAY_HTTP_SECRET=thisisasecretfortheapplicationandwekeepittosecuretheapplicationletuscheckandithastowork
 
 # Run the binary script when the container launches
-CMD ["./bin/loginservice", "-Dplay.http.secret.key=$PLAY_HTTP_SECRET"]
+CMD ["sbt", "run"]
