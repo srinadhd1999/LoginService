@@ -4,14 +4,11 @@ import javax.inject._
 import models.{User, UserRepository}
 import play.api.libs.json._
 import play.api.mvc._
-import services.{KafkaMessageProducer, KafkaMessageConsumer}
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class LoginController @Inject()(userRepository: UserRepository, cc: ControllerComponents, kafkaMessageProducer: KafkaMessageProducer, kafkaMessageConsumer: KafkaMessageConsumer)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class LoginController @Inject()(userRepository: UserRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
   implicit val userFormat: Format[User] = Json.format[User]
-
-  kafkaMessageConsumer.receiveMessages()
 
   def index: Action[AnyContent] =  Action { implicit request =>
     Ok(views.html.index())
@@ -44,14 +41,12 @@ class LoginController @Inject()(userRepository: UserRepository, cc: ControllerCo
         userRepository.authenticate(email, password).flatMap {
           case Some(user) =>
             if(email == "admin" && password == "admin") {
-              kafkaMessageProducer.sendMessage("admin", "sample message to read")
               Future.successful(Redirect(s"http://localhost:9001/getProductList?user=admin").withSession("user" -> "admin").flashing("success" -> "User authenticated successfully!"))
             }
             else {
               val name = userRepository.getUserName(email)
               name.flatMap { userName =>
                 println(s"User authenticated: $userName")
-                kafkaMessageProducer.sendMessage(userName, "sample message to read")
                 Future.successful(Redirect(s"http://localhost:9001/getProductList?user=$userName").withSession("user" -> userName).flashing("success" -> "User authenticated successfully!"))
               }.recover {
                 case ex: Exception =>
